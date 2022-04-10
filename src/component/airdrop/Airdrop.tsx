@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, TextField } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, CircularProgress, TextField } from '@mui/material'
 import { useState } from 'react'
 
 interface AirdropProps {
@@ -9,9 +9,14 @@ export default function Airdrop(props: AirdropProps) {
     const [publicKey, setPublicKey] = useState('')
     const [amount, setAmount] = useState<number>(0)
 
+    const [loading, setLoading] = useState(false)
+
     const handleAirdrop = async () => {
-        const result = await props.airdrop(publicKey, amount)
-        console.log(result)
+        setLoading(true)
+        await props.airdrop(publicKey, amount)
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
     }
 
     return (
@@ -43,8 +48,9 @@ export default function Airdrop(props: AirdropProps) {
                 <Button
                     variant='outlined'
                     style={{ marginTop: '1rem' }}
+                    disabled={loading}
                     onClick={handleAirdrop}>
-                    Airdrop
+                        {loading ? <CircularProgress size={24} /> : 'Airdrop'}
                 </Button>
 
             </CardContent>
