@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, TextField } from "@mui/material";
+import { Button, Card, CardContent, CardHeader, CircularProgress, TextField } from "@mui/material";
 import { useState } from "react";
 import { Account } from "../../blockchain/Blockchain";
 
@@ -14,7 +14,10 @@ export default function DelegateStakeContainer(props: DelegateStakeProps) {
     const [voteAccountPubKey, setVoteAccountPubKey] = useState<string>("")
     const [amount, setAmount] = useState<number>(0)
 
+    const [loading, setLoading] = useState<boolean>(false)
+
     const delegateFunds = async () => {
+        setLoading(true)
         try {
             const fund = props.findAccount(fundPubKey)
             const staker = props.findAccount(stakerPubKey)
@@ -24,6 +27,7 @@ export default function DelegateStakeContainer(props: DelegateStakeProps) {
             console.error(e)
             alert(e)
         }
+        setLoading(false)
     }
 
     return (
@@ -75,7 +79,7 @@ export default function DelegateStakeContainer(props: DelegateStakeProps) {
                     variant="outlined"
                     style={{ marginTop: '1rem' }}
                     onClick={delegateFunds}>
-                    Delegate
+                    {loading ? <CircularProgress size={24} /> : 'Delegate'}
                 </Button>
             </CardContent>
         </Card>
