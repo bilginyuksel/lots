@@ -9,5 +9,7 @@ export function createSolanaBlockchainNetworkConnection(): SolanaNetwork {
     }
     const network = new SolanaNetwork()
     console.log(network)
+    const voteAccountKey = "FASKWbvw5HSrVkaCwhp3MyHmTvUc92KJsujHhPopQRXk"
+    network.onAccountLamportChanged(voteAccountKey, () => {})
     return network
 }

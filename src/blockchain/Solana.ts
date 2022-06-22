@@ -9,7 +9,9 @@ import {
     sendAndConfirmTransaction,
     StakeProgram,
     Authorized,
-    Lockup
+    Lockup,
+    VoteProgram,
+    ValidatorInfo
 } from '@solana/web3.js'
 import { Account, BlockchainNetwork } from './Blockchain';
 
@@ -17,6 +19,10 @@ const solanaRpcUrl = "http://164.92.234.61:8899"
 const connection = new Connection(solanaRpcUrl, { commitment: "root" })
 
 export class SolanaNetwork implements BlockchainNetwork {
+
+    // constructor() {
+    //     this.delegateStake = this.delegateStake.bind(this)
+    // }
 
     async delegateStake(fund: Account, staker: Account, authorizedAccount: Account, amount: number, voteAccount: string): Promise<void> {
         const lamportsForStakeAccount = await connection.getMinimumBalanceForRentExemption(StakeProgram.space)
@@ -105,5 +111,13 @@ export class SolanaNetwork implements BlockchainNetwork {
     async getBalance(publicKey: string): Promise<number> {
         const pubkey = new PublicKey(publicKey)
         return await connection.getBalance(pubkey)
+    }
+
+    onAccountLamportChanged(publicKey: string, callback: (lamport: number) => void): void {
+        const pubkey = new PublicKey(publicKey)
+        let accountLamportsAtFirst = 0
+        connection.onAccountChange(pubkey, (accountInfo) => {
+            console.log(accountInfo)
+        })
     }
 }
